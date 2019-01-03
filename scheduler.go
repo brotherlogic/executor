@@ -49,6 +49,7 @@ func (s *Scheduler) runAndWait(c *rCommand) {
 }
 
 func (s *Scheduler) run(c *rCommand) error {
+	s.runs++
 	out, _ := c.command.StdoutPipe()
 	if out != nil {
 		scanner := bufio.NewScanner(out)

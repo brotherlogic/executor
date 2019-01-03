@@ -16,6 +16,6 @@ message ExecuteResponse {
   string command_output = 2;
 }
 
-service WantService {
+service ExecutorService {
   rpc Execute(ExecuteRequest) returns (ExecuteResponse) {};
 }
