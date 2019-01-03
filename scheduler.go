@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os/exec"
 	"sync"
 	"time"
@@ -14,6 +15,7 @@ type Scheduler struct {
 	commands     []*rCommand
 	runs         int64
 	executeMutex *sync.Mutex
+	log          func(str string)
 }
 
 type rCommand struct {
@@ -82,6 +84,9 @@ func (s *Scheduler) run(c *rCommand) error {
 	go func() {
 		err := c.command.Wait()
 		c.endTime = time.Now().Unix()
+
+		s.log(fmt.Sprintf("Ran %v: %v, %v", c.base.Binary, c.output, c.erroutput))
+
 		c.err = err
 	}()
 

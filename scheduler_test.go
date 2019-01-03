@@ -1,16 +1,22 @@
 package main
 
 import (
+	"log"
 	"sync"
 	"testing"
 
 	pb "github.com/brotherlogic/executor/proto"
 )
 
+func dlog(str string) {
+	log.Printf("%v", str)
+}
+
 func TestSchedulerRun(t *testing.T) {
 	s := Scheduler{
 		commands:     make([]*rCommand, 0),
 		executeMutex: &sync.Mutex{},
+		log:          dlog,
 	}
 
 	output, err := s.schedule(&pb.Command{Binary: "ls", Parameters: []string{"-ltr"}})
@@ -29,6 +35,7 @@ func TestBadSchedulerRun(t *testing.T) {
 	s := Scheduler{
 		commands:     make([]*rCommand, 0),
 		executeMutex: &sync.Mutex{},
+		log:          dlog,
 	}
 
 	output, err := s.schedule(&pb.Command{Binary: "madeupcommand", Parameters: []string{"-ltr"}})
@@ -42,6 +49,7 @@ func TestStdErrSchedulerRu(t *testing.T) {
 	s := Scheduler{
 		commands:     make([]*rCommand, 0),
 		executeMutex: &sync.Mutex{},
+		log:          dlog,
 	}
 
 	_, err := s.schedule(&pb.Command{Binary: "./run.sh", Parameters: []string{}})
