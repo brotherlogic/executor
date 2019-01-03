@@ -5,31 +5,38 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"sync"
 
 	"github.com/brotherlogic/goserver"
 	"github.com/brotherlogic/keystore/client"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
+	pb "github.com/brotherlogic/executor/proto"
 	pbg "github.com/brotherlogic/goserver/proto"
 )
 
 //Server main server type
 type Server struct {
 	*goserver.GoServer
+	scheduler *Scheduler
 }
 
 // Init builds the server
 func Init() *Server {
 	s := &Server{
 		&goserver.GoServer{},
+		&Scheduler{
+			commands:     make([]*rCommand, 0),
+			executeMutex: &sync.Mutex{},
+		},
 	}
 	return s
 }
 
 // DoRegister does RPC registration
 func (s *Server) DoRegister(server *grpc.Server) {
-	// Pass
+	pb.RegisterExecutorServiceServer(server, s)
 }
 
 // ReportHealth alerts if we're not healthy
@@ -44,7 +51,9 @@ func (s *Server) Mote(ctx context.Context, master bool) error {
 
 // GetState gets the state of the server
 func (s *Server) GetState() []*pbg.State {
-	return []*pbg.State{}
+	return []*pbg.State{
+		&pbg.State{Key: "runs", Value: s.scheduler.runs},
+	}
 }
 
 func main() {
