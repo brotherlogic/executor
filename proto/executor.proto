@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package executor;
+
+message Command {
+  string binary = 1;
+  repeated string parameters = 2;
+}
+
+message ExecuteRequest {
+  Command command = 1;
+}
+
+message ExecuteResponse {
+  int64 time_taken_in_millis = 1;
+  string command_output = 2;
+}
+
+service WantService {
+  rpc Execute(ExecuteRequest) returns (ExecuteResponse) {};
+}
