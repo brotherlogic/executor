@@ -31,6 +31,7 @@ func Init() *Server {
 			executeMutex: &sync.Mutex{},
 		},
 	}
+	s.scheduler.log = s.Log
 	return s
 }
 
