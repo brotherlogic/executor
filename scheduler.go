@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"os"
 	"os/exec"
+	"strings"
 	"sync"
 	"time"
 
@@ -52,6 +54,27 @@ func (s *Scheduler) runAndWait(c *rCommand) {
 
 func (s *Scheduler) run(c *rCommand) error {
 	s.runs++
+
+	// Setup the gopath
+	env := os.Environ()
+	gpath := "/home/simon/code"
+	c.command.Path = strings.Replace(c.command.Path, "$GOPATH", gpath, -1)
+	for i := range c.command.Args {
+		c.command.Args[i] = strings.Replace(c.command.Args[i], "$GOPATH", gpath, -1)
+	}
+	path := fmt.Sprintf("GOPATH=/home/simon/code")
+	found := false
+	for i, blah := range env {
+		if strings.HasPrefix(blah, "GOPATH") {
+			env[i] = path
+			found = true
+		}
+	}
+	if !found {
+		env = append(env, path)
+	}
+	c.command.Env = env
+
 	out, _ := c.command.StdoutPipe()
 	if out != nil {
 		scanner := bufio.NewScanner(out)
