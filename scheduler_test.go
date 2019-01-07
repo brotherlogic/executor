@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"sync"
 	"testing"
 
@@ -13,6 +14,9 @@ func dlog(str string) {
 }
 
 func TestSchedulerRun(t *testing.T) {
+	os.Unsetenv("GOBIN")
+	os.Unsetenv("GOPATH")
+
 	s := Scheduler{
 		commands:     make([]*rCommand, 0),
 		executeMutex: &sync.Mutex{},
