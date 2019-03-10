@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"golang.org/x/net/context"
@@ -17,4 +18,9 @@ func (s *Server) Execute(ctx context.Context, req *pb.ExecuteRequest) (*pb.Execu
 		TimeTakenInMillis: time.Now().Sub(sTime).Nanoseconds() / 100000,
 		CommandOutput:     output,
 	}, err
+}
+
+// Execute executes a command
+func (s *Server) QueueExecute(ctx context.Context, req *pb.ExecuteRequest) (*pb.ExecuteResponse, error) {
+	return nil, fmt.Errorf("Not implemented yet")
 }

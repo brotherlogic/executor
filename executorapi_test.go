@@ -19,3 +19,12 @@ func TestRunAPI(t *testing.T) {
 		t.Errorf("Command took no time")
 	}
 }
+
+func TestRunQueueAPI(t *testing.T) {
+	s := InitTestServer()
+	_, err := s.QueueExecute(context.Background(), &pb.ExecuteRequest{Command: &pb.Command{Binary: "ls"}})
+
+	if err == nil {
+		t.Errorf("Should have failed")
+	}
+}
