@@ -7,6 +7,14 @@ message Command {
   repeated string parameters = 2;
 }
 
+enum CommandStatus {
+  UNKNOWN = 0;
+  IN_QUEUE = 1;
+  IN_PROGRESS = 2;
+  COMPLETE = 3;
+}
+
+
 message ExecuteRequest {
   Command command = 1;
 }
@@ -14,8 +22,10 @@ message ExecuteRequest {
 message ExecuteResponse {
   int64 time_taken_in_millis = 1;
   string command_output = 2;
+  CommandStatus status = 3;
 }
 
 service ExecutorService {
   rpc Execute(ExecuteRequest) returns (ExecuteResponse) {};
+  rpc QueueExecute(ExecuteRequest) returns (ExecuteResponse) {};
 }

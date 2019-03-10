@@ -6,14 +6,11 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"time"
 
 	"github.com/brotherlogic/goserver/utils"
 	"google.golang.org/grpc"
 
 	pb "github.com/brotherlogic/executor/proto"
-	pbgs "github.com/brotherlogic/goserver/proto"
-	pbt "github.com/brotherlogic/tracer/proto"
 
 	//Needed to pull in gzip encoding init
 	_ "google.golang.org/grpc/encoding/gzip"
@@ -24,7 +21,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to reach organiser: %v", err)
 	}
-	ctx, cancel := utils.BuildContext("recordwants-cli", "recordwants", pbgs.ContextType_LONG)
+	ctx, cancel := utils.BuildContext("recordwants-cli", "recordwants")
 	defer cancel()
 
 	var ondeck = flag.String("server", "", "The server to run on")
@@ -62,5 +59,4 @@ func main() {
 			}
 		}
 	}
-	utils.SendTrace(ctx, "End of CLI", time.Now(), pbt.Milestone_END, "recordwants-cli")
 }
