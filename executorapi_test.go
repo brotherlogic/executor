@@ -22,9 +22,48 @@ func TestRunAPI(t *testing.T) {
 
 func TestRunQueueAPI(t *testing.T) {
 	s := InitTestServer()
-	_, err := s.QueueExecute(context.Background(), &pb.ExecuteRequest{Command: &pb.Command{Binary: "ls"}})
+	_, err := s.QueueExecute(context.Background(), &pb.ExecuteRequest{Command: &pb.Command{Binary: "ls", Parameters: []string{"-ltr"}}})
 
-	if err == nil {
-		t.Errorf("Should have failed")
+	if err != nil {
+		t.Errorf("Failed: %v", err)
+	}
+
+	s.runQueue(context.Background())
+
+	resp, err := s.QueueExecute(context.Background(), &pb.ExecuteRequest{Command: &pb.Command{Binary: "ls", Parameters: []string{"-ltr"}}})
+
+	if err != nil {
+		t.Errorf("Failed: %v", err)
+	}
+
+	if resp.Status != pb.CommandStatus_COMPLETE {
+		t.Errorf("Bad resp: %v", resp)
+	}
+}
+
+func TestRunQueueWithBadCommand(t *testing.T) {
+	s := InitTestServer()
+	_, err := s.QueueExecute(context.Background(), &pb.ExecuteRequest{Command: &pb.Command{Binary: "ltttts", Parameters: []string{"-ltr"}}})
+
+	if err != nil {
+		t.Errorf("Failed: %v", err)
+	}
+
+	s.runQueue(context.Background())
+
+	resp, err := s.QueueExecute(context.Background(), &pb.ExecuteRequest{Command: &pb.Command{Binary: "ltttts", Parameters: []string{"-ltr"}}})
+
+	if err != nil {
+		t.Errorf("Failed: %v", err)
+	}
+
+	if resp.Status != pb.CommandStatus_COMPLETE {
+		t.Errorf("Bad resp: %v", resp)
+	}
+}
+
+func TestMini(t *testing.T) {
+	if mini(10, 5) != 5 {
+		t.Errorf("Bad min")
 	}
 }
