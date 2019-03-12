@@ -16,10 +16,16 @@ import (
 	pbg "github.com/brotherlogic/goserver/proto"
 )
 
+type queueEntry struct {
+	req  *pb.ExecuteRequest
+	resp *pb.ExecuteResponse
+}
+
 //Server main server type
 type Server struct {
 	*goserver.GoServer
 	scheduler *Scheduler
+	queue     []*queueEntry
 }
 
 // Init builds the server
@@ -30,6 +36,7 @@ func Init() *Server {
 			commands:     make([]*rCommand, 0),
 			executeMutex: &sync.Mutex{},
 		},
+		make([]*queueEntry, 0),
 	}
 	s.scheduler.log = s.Log
 	return s
