@@ -8,10 +8,7 @@ import (
 	pb "github.com/brotherlogic/executor/proto"
 )
 
-func blank() {
-}
-
-func (s *Server) runQueue(ctx context.Context) {
+func (s *Server) runQueue(ctx context.Context) error {
 	for _, entry := range s.queue {
 		if entry.resp.Status == pb.CommandStatus_IN_QUEUE {
 			entry.resp.Status = pb.CommandStatus_IN_PROGRESS
@@ -22,7 +19,9 @@ func (s *Server) runQueue(ctx context.Context) {
 				entry.resp.CommandOutput = output
 			}
 			entry.resp.Status = pb.CommandStatus_COMPLETE
-			return
+			return nil
 		}
 	}
+
+	return nil
 }
