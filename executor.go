@@ -65,9 +65,14 @@ func (s *Server) Mote(ctx context.Context, master bool) error {
 
 // GetState gets the state of the server
 func (s *Server) GetState() []*pbg.State {
+	v := []string{}
+	for _, q := range s.queue {
+		v = append(v, fmt.Sprintf("%v", q.resp.Status))
+	}
 	return []*pbg.State{
 		&pbg.State{Key: "runs", Value: s.scheduler.runs},
 		&pbg.State{Key: "queue_size", Value: int64(len(s.queue))},
+		&pbg.State{Key: "state", Text: fmt.Sprintf("%v", v)},
 	}
 }
 

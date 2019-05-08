@@ -60,6 +60,7 @@ func main() {
 					fmt.Printf("%v %v\n", entry.Identifier, resp)
 					time.Sleep(time.Second)
 				}
+				fmt.Printf("DONE %v %v\n", entry.Identifier, resp)
 			}
 		}
 	}
