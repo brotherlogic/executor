@@ -67,6 +67,7 @@ func (s *Server) Mote(ctx context.Context, master bool) error {
 func (s *Server) GetState() []*pbg.State {
 	return []*pbg.State{
 		&pbg.State{Key: "runs", Value: s.scheduler.runs},
+		&pbg.State{Key: "queue_size", Value: int64(len(s.queue))},
 	}
 }
 
