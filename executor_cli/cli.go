@@ -21,7 +21,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to reach organiser: %v", err)
 	}
-	ctx, cancel := utils.BuildContext("recordwants-cli", "recordwants")
+	ctx, cancel := utils.BuildContext("executor-cli", "executor")
 	defer cancel()
 
 	var ondeck = flag.String("server", "", "The server to run on")
@@ -51,7 +51,7 @@ func main() {
 
 			client := pb.NewExecutorServiceClient(conn)
 
-			resp, err := client.Execute(ctx, &pb.ExecuteRequest{Command: &pb.Command{Binary: os.Args[adjust], Parameters: os.Args[adjust+1:]}})
+			resp, err := client.QueueExecute(ctx, &pb.ExecuteRequest{Command: &pb.Command{Binary: os.Args[adjust], Parameters: os.Args[adjust+1:]}})
 			if err != nil {
 				fmt.Printf("%v failed: %v\n", entry.Identifier, err)
 			} else {
