@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/brotherlogic/goserver/utils"
 	"google.golang.org/grpc"
@@ -55,7 +56,10 @@ func main() {
 			if err != nil {
 				fmt.Printf("%v failed: %v\n", entry.Identifier, err)
 			} else {
-				fmt.Printf("%v (%v): %v\n", entry.Identifier, resp.TimeTakenInMillis, resp.CommandOutput)
+				for resp.Status != pb.CommandStatus_COMPLETE {
+					fmt.Printf("%v %v\n", entry.Identifier, resp)
+					time.Sleep(time.Second)
+				}
 			}
 		}
 	}

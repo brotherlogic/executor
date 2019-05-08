@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/brotherlogic/keystore/client"
+	"golang.org/x/net/context"
 )
 
 func InitTestServer() *Server {
@@ -13,6 +14,11 @@ func InitTestServer() *Server {
 	return s
 }
 
-func TestBlank(t *testing.T) {
-	blank()
+func TestRunEmptyQueue(t *testing.T) {
+	s := InitTestServer()
+
+	err := s.runQueue(context.Background())
+	if err != nil {
+		t.Errorf("Unable to run empty queue: %v", err)
+	}
 }
