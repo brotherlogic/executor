@@ -12,6 +12,7 @@ func (s *Server) runQueue(ctx context.Context) error {
 	for _, entry := range s.queue {
 		s.Log(fmt.Sprintf("Attemping %v", entry))
 		if entry.resp.Status == pb.CommandStatus_IN_QUEUE {
+			s.Log(fmt.Sprintf("Running %v", entry))
 			entry.resp.Status = pb.CommandStatus_IN_PROGRESS
 			output, err := s.runExecute(ctx, entry.req)
 			if err != nil {
