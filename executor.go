@@ -93,7 +93,7 @@ func main() {
 
 	server.RegisterServer("executor", false)
 
-	server.RegisterRepeatingTask(server.runQueue, "run_queue", time.Minute)
+	server.RegisterRepeatingTaskNonMaster(server.runQueue, "run_queue", time.Minute)
 
 	fmt.Printf("%v", server.Serve())
 }

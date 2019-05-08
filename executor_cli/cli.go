@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -11,11 +12,28 @@ import (
 	"github.com/brotherlogic/goserver/utils"
 	"google.golang.org/grpc"
 
+	pbd "github.com/brotherlogic/discovery/proto"
 	pb "github.com/brotherlogic/executor/proto"
 
 	//Needed to pull in gzip encoding init
 	_ "google.golang.org/grpc/encoding/gzip"
 )
+
+func run(ctx context.Context, client pb.ExecutorServiceClient, binary string, params []string, entry *pbd.RegistryEntry) {
+	var err error
+	var resp *pb.ExecuteResponse
+	for resp == nil || resp.Status != pb.CommandStatus_COMPLETE {
+		resp, err = client.QueueExecute(ctx, &pb.ExecuteRequest{Command: &pb.Command{Binary: binary, Parameters: params}})
+		if err != nil {
+			fmt.Printf("%v failed: %v\n", entry.Identifier, err)
+		} else {
+			fmt.Printf("%v %v\n", entry.Identifier, resp)
+			time.Sleep(time.Second)
+		}
+	}
+	fmt.Printf("DONE %v %v\n", entry.Identifier, resp)
+
+}
 
 func main() {
 	entries, err := utils.ResolveAll("executor")
@@ -51,17 +69,7 @@ func main() {
 			}
 
 			client := pb.NewExecutorServiceClient(conn)
-
-			resp, err := client.QueueExecute(ctx, &pb.ExecuteRequest{Command: &pb.Command{Binary: os.Args[adjust], Parameters: os.Args[adjust+1:]}})
-			if err != nil {
-				fmt.Printf("%v failed: %v\n", entry.Identifier, err)
-			} else {
-				for resp.Status != pb.CommandStatus_COMPLETE {
-					fmt.Printf("%v %v\n", entry.Identifier, resp)
-					time.Sleep(time.Second)
-				}
-				fmt.Printf("DONE %v %v\n", entry.Identifier, resp)
-			}
+			run(ctx, client, os.Args[adjust], os.Args[adjust+1:], entry)
 		}
 	}
 }
