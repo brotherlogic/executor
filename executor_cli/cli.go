@@ -22,13 +22,18 @@ import (
 func run(ctx context.Context, client pb.ExecutorServiceClient, binary string, params []string, entry *pbd.RegistryEntry) {
 	var err error
 	var resp *pb.ExecuteResponse
+	currState := pb.CommandStatus_COMPLETE
 	for resp == nil || resp.Status != pb.CommandStatus_COMPLETE {
 		resp, err = client.QueueExecute(ctx, &pb.ExecuteRequest{Command: &pb.Command{Binary: binary, Parameters: params}})
 		if err != nil {
 			fmt.Printf("%v failed: %v\n", entry.Identifier, err)
 		} else {
-			fmt.Printf("%v %v\n", entry.Identifier, resp)
+			if resp.Status != currState {
+				fmt.Printf("%v %v\n", entry.Identifier, resp)
+				currState = resp.Status
+			}
 			time.Sleep(time.Second)
+
 		}
 	}
 	fmt.Printf("DONE %v %v\n", entry.Identifier, resp)
@@ -69,7 +74,9 @@ func main() {
 			}
 
 			client := pb.NewExecutorServiceClient(conn)
-			run(ctx, client, os.Args[adjust], os.Args[adjust+1:], entry)
+			go run(ctx, client, os.Args[adjust], os.Args[adjust+1:], entry)
 		}
 	}
+
+	time.Sleep(time.Hour)
 }
