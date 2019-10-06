@@ -19,7 +19,7 @@ import (
 	_ "google.golang.org/grpc/encoding/gzip"
 )
 
-func run(ctx context.Context, client pb.ExecutorServiceClient, binary string, params []string, entry *pbd.RegistryEntry) {
+func run(ctx context.Context, client pb.ExecutorServiceClient, binary string, params []string, entry *pbd.RegistryEntry, c chan bool) {
 	var err error
 	var resp *pb.ExecuteResponse
 	currState := pb.CommandStatus_COMPLETE
@@ -37,6 +37,7 @@ func run(ctx context.Context, client pb.ExecutorServiceClient, binary string, pa
 		}
 	}
 	fmt.Printf("DONE %v %v\n", entry.Identifier, resp)
+	c <- true
 
 }
 
@@ -64,6 +65,8 @@ func main() {
 		}
 	}
 
+	c := make(chan bool)
+	count := 0
 	for _, entry := range entries {
 		if len(*ondeck) == 0 || entry.Identifier == *ondeck {
 			conn, err := grpc.Dial(entry.Ip+":"+strconv.Itoa(int(entry.Port)), grpc.WithInsecure())
@@ -74,9 +77,13 @@ func main() {
 			}
 
 			client := pb.NewExecutorServiceClient(conn)
-			go run(ctx, client, os.Args[adjust], os.Args[adjust+1:], entry)
+			go run(ctx, client, os.Args[adjust], os.Args[adjust+1:], entry, c)
+			count++
 		}
 	}
 
-	time.Sleep(time.Hour)
+	for count > 0 {
+		<-c
+		count--
+	}
 }
