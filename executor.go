@@ -91,7 +91,7 @@ func main() {
 
 	server.GoServer.KSclient = *keystoreclient.GetClient(server.DialMaster)
 
-	server.RegisterServer("executor", false)
+	server.RegisterServerIgnore("executor", false, true)
 
 	server.RegisterRepeatingTaskNonMaster(server.runQueue, "run_queue", time.Minute)
 
