@@ -42,7 +42,7 @@ func run(ctx context.Context, client pb.ExecutorServiceClient, binary string, pa
 }
 
 func main() {
-	entries, err := utils.ResolveAll("executor")
+	entries, err := utils.BaseResolveAll("executor")
 	if err != nil {
 		log.Fatalf("Unable to reach organiser: %v", err)
 	}
