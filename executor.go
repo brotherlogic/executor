@@ -70,8 +70,8 @@ func (s *Server) GetState() []*pbg.State {
 		v = append(v, fmt.Sprintf("%v", q.resp.Status))
 	}
 	return []*pbg.State{
-		&pbg.State{Key: "queue_size", Value: int64(len(s.queue))},
 		&pbg.State{Key: "runs", Value: s.scheduler.runs},
+		&pbg.State{Key: "queue_size", Value: int64(len(s.queue))},
 		&pbg.State{Key: "state", Text: fmt.Sprintf("%v", v)},
 	}
 }
