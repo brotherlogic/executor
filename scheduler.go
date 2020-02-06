@@ -110,7 +110,7 @@ func (s *Scheduler) run(c *rCommand) error {
 
 		s.log(fmt.Sprintf("Ran %v: %v, %v", c.base.Binary, c.output, c.erroutput))
 
-		c.err = err
+		c.err = fmt.Errorf("%v -> %v / %v", err, c.output, c.erroutput)
 	}()
 
 	return nil
