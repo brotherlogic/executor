@@ -27,6 +27,7 @@ func run(ctx context.Context, client pb.ExecutorServiceClient, binary string, pa
 		resp, err = client.QueueExecute(ctx, &pb.ExecuteRequest{Command: &pb.Command{Binary: binary, Parameters: params}})
 		if err != nil {
 			fmt.Printf("%v failed: %v\n", entry.Identifier, err)
+			break
 		} else {
 			if resp.Status != currState {
 				fmt.Printf("%v %v\n", entry.Identifier, resp)
