@@ -5,6 +5,7 @@ package executor;
 message Command {
   string binary = 1;
   repeated string parameters = 2;
+  bool delete_on_complete = 3;
 }
 
 enum CommandStatus {
@@ -17,6 +18,7 @@ enum CommandStatus {
 
 message ExecuteRequest {
   Command command = 1;
+  bool ready_for_deletion = 2;
 }
 
 message ExecuteResponse {
