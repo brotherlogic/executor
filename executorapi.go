@@ -32,6 +32,14 @@ func mini(a, b int) int {
 
 // QueueExecute executes a command
 func (s *Server) QueueExecute(ctx context.Context, req *pb.ExecuteRequest) (*pb.ExecuteResponse, error) {
+	// Pre clean the queue
+	nq := []*queueEntry{}
+	for _, q := range s.queue {
+		if !q.req.GetReadyForDeletion() {
+			nq = append(nq, q)
+		}
+	}
+
 	for _, q := range s.queue {
 		match := q.req.Command.Binary == req.Command.Binary && len(q.req.Command.Parameters) == len(req.Command.Parameters)
 		for i := 0; i < mini(len(q.req.Command.Parameters), len(req.Command.Parameters)); i++ {
@@ -39,6 +47,7 @@ func (s *Server) QueueExecute(ctx context.Context, req *pb.ExecuteRequest) (*pb.
 		}
 
 		if match {
+			q.req.ReadyForDeletion = q.req.GetCommand().GetDeleteOnComplete()
 			return q.resp, nil
 		}
 	}
