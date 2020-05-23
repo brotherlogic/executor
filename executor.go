@@ -10,6 +10,8 @@ import (
 
 	"github.com/brotherlogic/goserver"
 	"github.com/brotherlogic/keystore/client"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
@@ -21,6 +23,14 @@ type queueEntry struct {
 	req  *pb.ExecuteRequest
 	resp *pb.ExecuteResponse
 }
+
+var (
+	//Backlog - the print queue
+	Backlog = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "executor_backlog",
+		Help: "The size of the executor queue",
+	})
+)
 
 //Server main server type
 type Server struct {

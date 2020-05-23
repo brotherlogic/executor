@@ -39,6 +39,9 @@ func (s *Server) QueueExecute(ctx context.Context, req *pb.ExecuteRequest) (*pb.
 			nq = append(nq, q)
 		}
 	}
+	s.queue = nq
+
+	Backlog.Set(float64(len(s.queue)))
 
 	for _, q := range s.queue {
 		match := q.req.Command.Binary == req.Command.Binary && len(q.req.Command.Parameters) == len(req.Command.Parameters)
