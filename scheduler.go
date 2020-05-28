@@ -108,8 +108,6 @@ func (s *Scheduler) run(c *rCommand) error {
 		err := c.command.Wait()
 		c.endTime = time.Now().Unix()
 
-		s.log(fmt.Sprintf("Ran %v: %v, %v", c.base.Binary, c.output, c.erroutput))
-
 		if err != nil {
 			c.err = fmt.Errorf("%v -> %v / %v", err, c.output, c.erroutput)
 		}
