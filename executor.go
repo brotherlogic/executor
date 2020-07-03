@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/brotherlogic/goserver"
-	"github.com/brotherlogic/keystore/client"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"golang.org/x/net/context"
@@ -98,8 +97,6 @@ func main() {
 	server := Init()
 	server.PrepServer()
 	server.Register = server
-
-	server.GoServer.KSclient = *keystoreclient.GetClient(server.DialMaster)
 
 	err := server.RegisterServerV2("executor", false, true)
 	if err != nil {
