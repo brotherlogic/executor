@@ -28,13 +28,13 @@ func TestRunQueueAPI(t *testing.T) {
 		t.Errorf("Failed: %v", err)
 	}
 
-	s.runQueue(context.Background())
-
 	resp, err := s.QueueExecute(context.Background(), &pb.ExecuteRequest{Command: &pb.Command{Binary: "ls", Parameters: []string{"-ltr"}}})
 
 	if err != nil {
 		t.Errorf("Failed: %v", err)
 	}
+
+	s.drainQueue()
 
 	if resp.Status != pb.CommandStatus_COMPLETE {
 		t.Errorf("Bad resp: %v", resp)
@@ -49,13 +49,13 @@ func TestRunQueueWithBadCommand(t *testing.T) {
 		t.Errorf("Failed: %v", err)
 	}
 
-	s.runQueue(context.Background())
-
 	resp, err := s.QueueExecute(context.Background(), &pb.ExecuteRequest{Command: &pb.Command{Binary: "ltttts", Parameters: []string{"-ltr"}}})
 
 	if err != nil {
 		t.Errorf("Failed: %v", err)
 	}
+
+	s.drainQueue()
 
 	if resp.Status != pb.CommandStatus_COMPLETE {
 		t.Errorf("Bad resp: %v", resp)

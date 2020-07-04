@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/brotherlogic/goserver"
 	"github.com/prometheus/client_golang/prometheus"
@@ -21,6 +20,7 @@ import (
 type queueEntry struct {
 	req  *pb.ExecuteRequest
 	resp *pb.ExecuteResponse
+	ack  chan bool
 }
 
 var (
@@ -35,7 +35,9 @@ var (
 type Server struct {
 	*goserver.GoServer
 	scheduler *Scheduler
-	queue     []*queueEntry
+	queue     chan *queueEntry
+	archive   []*queueEntry
+	done      chan bool
 }
 
 // Init builds the server
@@ -46,7 +48,9 @@ func Init() *Server {
 			commands:     make([]*rCommand, 0),
 			executeMutex: &sync.Mutex{},
 		},
+		make(chan *queueEntry, 100),
 		make([]*queueEntry, 0),
+		make(chan bool),
 	}
 	s.scheduler.log = s.Log
 	return s
@@ -74,15 +78,12 @@ func (s *Server) Mote(ctx context.Context, master bool) error {
 
 // GetState gets the state of the server
 func (s *Server) GetState() []*pbg.State {
-	v := []string{}
-	for _, q := range s.queue {
-		v = append(v, fmt.Sprintf("%v", q.resp.Status))
-	}
-	return []*pbg.State{
-		&pbg.State{Key: "runs", Value: s.scheduler.runs},
-		&pbg.State{Key: "queue_size", Value: int64(len(s.queue))},
-		&pbg.State{Key: "state", Text: fmt.Sprintf("%v", v)},
-	}
+	return []*pbg.State{}
+}
+
+func (s *Server) drainQueue() {
+	close(s.queue)
+	<-s.done
 }
 
 func main() {
@@ -103,7 +104,9 @@ func main() {
 		return
 	}
 
-	server.RegisterRepeatingTaskNonMaster(server.runQueue, "run_queue", time.Minute)
+	go func() {
+		server.runQueue()
+	}()
 
 	fmt.Printf("%v", server.Serve())
 }
