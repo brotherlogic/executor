@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package executor;
 
+option go_package = "github.com/brotherlogic/executor/proto";
+
 message Command {
   string binary = 1;
   repeated string parameters = 2;
