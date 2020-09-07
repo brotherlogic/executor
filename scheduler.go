@@ -39,6 +39,7 @@ func (s *Scheduler) schedule(command *pb.Command) (string, error) {
 		command: exec.Command(command.Binary, command.Parameters...),
 	}
 
+	s.log(fmt.Sprintf("Executing: %v, %v", command.Binary, command.Parameters))
 	s.runAndWait(rCommand)
 	return rCommand.output, rCommand.err
 }
