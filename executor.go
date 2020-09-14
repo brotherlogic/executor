@@ -29,6 +29,11 @@ var (
 		Name: "executor_backlog",
 		Help: "The size of the executor queue",
 	})
+
+	archive = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "executor_archive",
+		Help: "The size of the executor queue",
+	})
 )
 
 //Server main server type
@@ -48,7 +53,7 @@ func Init() *Server {
 			commands:     make([]*rCommand, 0),
 			executeMutex: &sync.Mutex{},
 		},
-		make(chan *queueEntry, 100),
+		make(chan *queueEntry, 1000),
 		make([]*queueEntry, 0),
 		make(chan bool),
 	}

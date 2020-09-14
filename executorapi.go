@@ -40,6 +40,7 @@ func (s *Server) QueueExecute(ctx context.Context, req *pb.ExecuteRequest) (*pb.
 		}
 	}
 	s.archive = nq
+	archive.Set(float64(len(s.archive)))
 
 	Backlog.Set(float64(len(s.queue)))
 
@@ -58,6 +59,7 @@ func (s *Server) QueueExecute(ctx context.Context, req *pb.ExecuteRequest) (*pb.
 	r := &pb.ExecuteResponse{Status: pb.CommandStatus_IN_QUEUE}
 	entry := &queueEntry{req: req, resp: r, ack: make(chan bool, 100)}
 	s.archive = append(s.archive, entry)
+	archive.Set(float64(len(s.archive)))
 	s.queue <- entry
 	return r, nil
 }
