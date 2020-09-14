@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"golang.org/x/net/context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	pb "github.com/brotherlogic/executor/proto"
 )
@@ -54,6 +56,10 @@ func (s *Server) QueueExecute(ctx context.Context, req *pb.ExecuteRequest) (*pb.
 			q.req.ReadyForDeletion = q.req.GetCommand().GetDeleteOnComplete()
 			return q.resp, nil
 		}
+	}
+
+	if len(s.queue) > 100 {
+		return nil, status.Errorf(codes.ResourceExhausted, "Execute queue is full")
 	}
 
 	r := &pb.ExecuteResponse{Status: pb.CommandStatus_IN_QUEUE}
