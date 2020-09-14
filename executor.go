@@ -29,6 +29,11 @@ var (
 		Name: "executor_backlog",
 		Help: "The size of the executor queue",
 	})
+
+	archive = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "executor_archive",
+		Help: "The size of the executor queue",
+	})
 )
 
 //Server main server type
