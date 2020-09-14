@@ -53,7 +53,7 @@ func Init() *Server {
 			commands:     make([]*rCommand, 0),
 			executeMutex: &sync.Mutex{},
 		},
-		make(chan *queueEntry, 100),
+		make(chan *queueEntry, 1000),
 		make([]*queueEntry, 0),
 		make(chan bool),
 	}
