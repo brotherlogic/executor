@@ -58,7 +58,7 @@ func (s *Server) QueueExecute(ctx context.Context, req *pb.ExecuteRequest) (*pb.
 		}
 	}
 
-	if len(s.queue) > 100 {
+	if len(s.queue) > 90000 {
 		return nil, status.Errorf(codes.ResourceExhausted, "Execute queue is full")
 	}
 
