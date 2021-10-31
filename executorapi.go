@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"golang.org/x/net/context"
@@ -66,6 +67,8 @@ func (s *Server) QueueExecute(ctx context.Context, req *pb.ExecuteRequest) (*pb.
 	entry := &queueEntry{req: req, resp: r, ack: make(chan bool, 100)}
 	s.archive = append(s.archive, entry)
 	archive.Set(float64(len(s.archive)))
+	s.Log(fmt.Sprintf("Adding to queue: %v", len(s.queue)))
 	s.queue <- entry
+	s.Log(fmt.Sprintf("Added to queue"))
 	return r, nil
 }
