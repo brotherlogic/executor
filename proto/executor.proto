@@ -21,6 +21,7 @@ enum CommandStatus {
 message ExecuteRequest {
   Command command = 1;
   bool ready_for_deletion = 2;
+  string key = 3;
 }
 
 message ExecuteResponse {

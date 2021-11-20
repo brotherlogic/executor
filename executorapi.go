@@ -12,13 +12,13 @@ import (
 )
 
 func (s *Server) runExecute(req *pb.ExecuteRequest) (string, error) {
-	return s.scheduler.schedule(req.Command)
+	return s.scheduler.schedule(req.Command, req.GetKey())
 }
 
 // Execute executes a command
 func (s *Server) Execute(ctx context.Context, req *pb.ExecuteRequest) (*pb.ExecuteResponse, error) {
 	sTime := time.Now()
-	output, err := s.scheduler.schedule(req.Command)
+	output, err := s.scheduler.schedule(req.Command, req.GetKey())
 
 	return &pb.ExecuteResponse{
 		TimeTakenInMillis: time.Now().Sub(sTime).Nanoseconds() / 100000,
