@@ -53,6 +53,7 @@ func (s *Scheduler) schedule(command *pb.Command, key string) (string, error) {
 	t1 := time.Now()
 	s.runAndWait(rCommand)
 	execLatency.With(prometheus.Labels{"key": key}).Observe(float64(time.Since(t1).Seconds()))
+	s.log(fmt.Sprintf("%v took %v", command.Binary, time.Since(t1)))
 
 	s.log(fmt.Sprintf("Ran: %v, %v -> %v %v", command.Binary, command.Parameters, rCommand.output, rCommand.err))
 	return rCommand.output, rCommand.err
