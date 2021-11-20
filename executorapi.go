@@ -11,7 +11,7 @@ import (
 )
 
 func (s *Server) runExecute(req *pb.ExecuteRequest) (string, error) {
-	return s.scheduler.schedule(req.Command)
+	return s.scheduler.schedule(req.Command, req.GetKey())
 }
 
 // Execute executes a command

@@ -10,6 +10,16 @@ import (
 	"time"
 
 	pb "github.com/brotherlogic/executor/proto"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+)
+
+var (
+	execLatency = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:    "executorLatency_latency",
+		Help:    "The latency of server requests",
+		Buckets: []float64{.005 * 1000, .01 * 1000, .025 * 1000, .05 * 1000, .1 * 1000, .25 * 1000, .5 * 1000, 1 * 1000, 2.5 * 1000, 5 * 1000, 10 * 1000, 100 * 1000, 1000 * 1000},
+	}, []string{"key"})
 )
 
 // Scheduler for doing builds
@@ -30,7 +40,7 @@ type rCommand struct {
 	err       error
 }
 
-func (s *Scheduler) schedule(command *pb.Command) (string, error) {
+func (s *Scheduler) schedule(command *pb.Command, key string) (string, error) {
 	s.executeMutex.Lock()
 	defer s.executeMutex.Unlock()
 
@@ -39,7 +49,10 @@ func (s *Scheduler) schedule(command *pb.Command) (string, error) {
 		command: exec.Command(command.Binary, command.Parameters...),
 	}
 
+	t1 := time.Now()
 	s.runAndWait(rCommand)
+	execLatency.With(prometheus.Labels{"key": key}).Observe(float64(time.Since(t1).Nanoseconds() / 1000000))
+
 	s.log(fmt.Sprintf("Ran: %v, %v -> %v %v", command.Binary, command.Parameters, rCommand.output, rCommand.err))
 	return rCommand.output, rCommand.err
 }
