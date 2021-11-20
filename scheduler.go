@@ -18,7 +18,7 @@ var (
 	execLatency = promauto.NewHistogramVec(prometheus.HistogramOpts{
 		Name:    "executor_latency",
 		Help:    "The latency of server requests",
-		Buckets: []float64{.005 * 1000, .01 * 1000, .025 * 1000, .05 * 1000, .1 * 1000, .25 * 1000, .5 * 1000, 1 * 1000, 2.5 * 1000, 5 * 1000, 10 * 1000, 100 * 1000, 1000 * 1000},
+		Buckets: []float64{0.5, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024},
 	}, []string{"key"})
 )
 
@@ -52,7 +52,7 @@ func (s *Scheduler) schedule(command *pb.Command, key string) (string, error) {
 	s.log(fmt.Sprintf("Running: %v", command.Binary))
 	t1 := time.Now()
 	s.runAndWait(rCommand)
-	execLatency.With(prometheus.Labels{"key": key}).Observe(float64(time.Since(t1).Nanoseconds() / 1000000))
+	execLatency.With(prometheus.Labels{"key": key}).Observe(float64(time.Since(t1).Seconds()))
 
 	s.log(fmt.Sprintf("Ran: %v, %v -> %v %v", command.Binary, command.Parameters, rCommand.output, rCommand.err))
 	return rCommand.output, rCommand.err
