@@ -16,7 +16,7 @@ import (
 
 var (
 	execLatency = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name:    "executorLatency_latency",
+		Name:    "executor_latency",
 		Help:    "The latency of server requests",
 		Buckets: []float64{.005 * 1000, .01 * 1000, .025 * 1000, .05 * 1000, .1 * 1000, .25 * 1000, .5 * 1000, 1 * 1000, 2.5 * 1000, 5 * 1000, 10 * 1000, 100 * 1000, 1000 * 1000},
 	}, []string{"key"})
