@@ -11,7 +11,7 @@ func (s *Server) runQueue() {
 		s.Log(fmt.Sprintf("QUEUE EXEC: %v", entry))
 		entry.resp.Status = pb.CommandStatus_IN_PROGRESS
 		output, err := s.runExecute(entry.req)
-		s.Log(fmt.Sprintf("QUEUE EXEC COMP: %v", entry))
+		s.Log(fmt.Sprintf("QUEUE EXEC COMPLETE: %v", entry))
 		if err != nil {
 			entry.resp.CommandOutput = fmt.Sprintf("%v", err)
 		} else {
