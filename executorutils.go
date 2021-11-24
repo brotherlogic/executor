@@ -8,10 +8,10 @@ import (
 
 func (s *Server) runQueue() {
 	for entry := range s.queue {
-		s.Log(fmt.Sprintf("THE QUEUE EXEC IN START: %+v", entry))
+		s.Log(fmt.Sprintf("THE QUEUE EXEC OUT START: %+v", entry))
 		entry.resp.Status = pb.CommandStatus_IN_PROGRESS
 		output, err := s.runExecute(entry.req)
-		s.Log(fmt.Sprintf("THE QUEUE EXEC IN COMPLETE: %+v", entry))
+		s.Log(fmt.Sprintf("THE QUEUE EXEC OUT COMPLETE: %+v", entry))
 		if err != nil {
 			entry.resp.CommandOutput = fmt.Sprintf("%v", err)
 		} else {
