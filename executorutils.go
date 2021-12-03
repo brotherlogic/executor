@@ -8,6 +8,7 @@ import (
 
 func (s *Server) runQueue() {
 	for entry := range s.queue {
+		Backlog.Set(float64(len(s.queue)))
 		s.Log(fmt.Sprintf("THE QUEUE EXEC OUT START: %+v => %v", entry, entry.req.Command.Binary))
 		entry.resp.Status = pb.CommandStatus_IN_PROGRESS
 		output, err := s.runExecute(entry.req)
