@@ -55,7 +55,7 @@ func (s *Server) QueueExecute(ctx context.Context, req *pb.ExecuteRequest) (*pb.
 
 		if match {
 			s.Log(fmt.Sprintf("Found in queue"))
-			q.req.ReadyForDeletion = q.req.GetCommand().GetDeleteOnComplete()
+			q.req.ReadyForDeletion = q.req.GetCommand().GetDeleteOnComplete() || q.resp.GetExitCode() != 0
 			return q.resp, nil
 		}
 	}

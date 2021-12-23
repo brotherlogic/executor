@@ -28,6 +28,7 @@ message ExecuteResponse {
   int64 time_taken_in_millis = 1;
   string command_output = 2;
   CommandStatus status = 3;
+  int32 exit_code = 4;
 }
 
 service ExecutorService {

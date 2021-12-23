@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	pb "github.com/brotherlogic/executor/proto"
+	"google.golang.org/grpc/status"
 )
 
 func (s *Server) runQueue() {
@@ -15,6 +16,7 @@ func (s *Server) runQueue() {
 		s.Log(fmt.Sprintf("THE QUEUE EXEC OUT COMPLETE: %+v => %v", entry, entry.req.Command.Binary))
 		if err != nil {
 			entry.resp.CommandOutput = fmt.Sprintf("%v", err)
+			entry.resp.ExitCode = int32(status.Convert(err).Code())
 		} else {
 			entry.resp.CommandOutput = output
 		}
