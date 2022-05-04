@@ -3,13 +3,15 @@ module github.com/brotherlogic/executor
 go 1.16
 
 require (
-	github.com/brotherlogic/discovery v0.0.0-20220305205509-0d9c25e7c1e0
-	github.com/brotherlogic/goserver v0.0.0-20220326170934-0e7b69813c4c
+	github.com/brotherlogic/buildserver v0.0.0-20220502222331-49601e464708 // indirect
+	github.com/brotherlogic/discovery v0.0.0-20220424202222-d3a91d62ee1a
+	github.com/brotherlogic/goserver v0.0.0-20220504162159-8b49fc551bfb
 	github.com/brotherlogic/keystore v0.0.0-20220326232252-29f315526691
-	github.com/brotherlogic/logging v0.0.0-20220326233758-e7e2b9dfda1b // indirect
 	github.com/golang/protobuf v1.5.2
 	github.com/prometheus/client_golang v1.12.1
-	golang.org/x/net v0.0.0-20220325170049-de3da57026de
-	google.golang.org/grpc v1.45.0
+	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4
+	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6 // indirect
+	google.golang.org/genproto v0.0.0-20220504150022-98cd25cafc72 // indirect
+	google.golang.org/grpc v1.46.0
 	google.golang.org/protobuf v1.28.0
 )
