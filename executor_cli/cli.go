@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/brotherlogic/goserver/utils"
@@ -69,7 +70,7 @@ func main() {
 	c := make(chan bool)
 	count := 0
 	for _, entry := range entries {
-		if len(*ondeck) == 0 || entry.Identifier == *ondeck {
+		if len(*ondeck) == 0 || strings.Contains(entry.Identifier, *ondeck) {
 			conn, err := grpc.Dial(entry.Ip+":"+strconv.Itoa(int(entry.Port)), grpc.WithInsecure())
 			defer conn.Close()
 
