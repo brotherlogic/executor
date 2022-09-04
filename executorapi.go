@@ -10,14 +10,14 @@ import (
 	pb "github.com/brotherlogic/executor/proto"
 )
 
-func (s *Server) runExecute(req *pb.ExecuteRequest) (string, error) {
-	return s.scheduler.schedule(req.Command, req.GetKey())
+func (s *Server) runExecute(ctx context.Context, req *pb.ExecuteRequest) (string, error) {
+	return s.scheduler.schedule(ctx, req.Command, req.GetKey())
 }
 
 // Execute executes a command
 func (s *Server) Execute(ctx context.Context, req *pb.ExecuteRequest) (*pb.ExecuteResponse, error) {
 	sTime := time.Now()
-	output, err := s.scheduler.schedule(req.Command, req.GetKey())
+	output, err := s.scheduler.schedule(ctx, req.Command, req.GetKey())
 
 	return &pb.ExecuteResponse{
 		TimeTakenInMillis: time.Now().Sub(sTime).Nanoseconds() / 100000,

@@ -2,18 +2,21 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	pb "github.com/brotherlogic/executor/proto"
+	"github.com/brotherlogic/goserver/utils"
 	"google.golang.org/grpc/status"
 )
 
 func (s *Server) runQueue() {
 	for entry := range s.queue {
+		ctx, cancel := utils.ManualContext("queue-run", time.Minute)
 		Backlog.Set(float64(len(s.queue)))
-		s.Log(fmt.Sprintf("THE QUEUE EXEC OUT START: %+v => %v", entry, entry.req.Command.Binary))
+		s.CtxLog(ctx, fmt.Sprintf("THE QUEUE EXEC OUT START: %+v => %v", entry, entry.req.Command.Binary))
 		entry.resp.Status = pb.CommandStatus_IN_PROGRESS
-		output, err := s.runExecute(entry.req)
-		s.Log(fmt.Sprintf("THE QUEUE EXEC OUT COMPLETE: %+v => %v", entry, entry.req.Command.Binary))
+		output, err := s.runExecute(ctx, entry.req)
+		s.CtxLog(ctx, fmt.Sprintf("THE QUEUE EXEC OUT COMPLETE: %+v => %v", entry, entry.req.Command.Binary))
 		if err != nil {
 			entry.resp.CommandOutput = fmt.Sprintf("%v", err)
 			entry.resp.ExitCode = int32(status.Convert(err).Code())
@@ -23,6 +26,7 @@ func (s *Server) runQueue() {
 		entry.resp.Status = pb.CommandStatus_COMPLETE
 
 		entry.ack <- true
+		cancel()
 	}
 
 	s.done <- true

@@ -12,6 +12,7 @@ import (
 	pb "github.com/brotherlogic/executor/proto"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+	"golang.org/x/net/context"
 )
 
 var (
@@ -27,7 +28,7 @@ type Scheduler struct {
 	commands     []*rCommand
 	runs         int64
 	executeMutex *sync.Mutex
-	log          func(str string)
+	log          func(ctx context.Context, str string)
 }
 
 type rCommand struct {
@@ -40,7 +41,7 @@ type rCommand struct {
 	err       error
 }
 
-func (s *Scheduler) schedule(command *pb.Command, key string) (string, error) {
+func (s *Scheduler) schedule(ctx context.Context, command *pb.Command, key string) (string, error) {
 	s.executeMutex.Lock()
 	defer s.executeMutex.Unlock()
 
@@ -49,13 +50,13 @@ func (s *Scheduler) schedule(command *pb.Command, key string) (string, error) {
 		command: exec.Command(command.Binary, command.Parameters...),
 	}
 
-	s.log(fmt.Sprintf("Running command: %v", command.Binary))
+	s.log(ctx, fmt.Sprintf("Running command: %v", command.Binary))
 	t1 := time.Now()
 	s.runAndWait(rCommand)
 	execLatency.With(prometheus.Labels{"key": key}).Observe(float64(time.Since(t1).Seconds()))
-	s.log(fmt.Sprintf("%v took %v", command.Binary, time.Since(t1)))
+	s.log(ctx, fmt.Sprintf("%v took %v", command.Binary, time.Since(t1)))
 
-	s.log(fmt.Sprintf("Ran: %v, %v -> %v %v", command.Binary, command.Parameters, rCommand.output, rCommand.err))
+	s.log(ctx, fmt.Sprintf("Ran: %v, %v -> %v %v", command.Binary, command.Parameters, rCommand.output, rCommand.err))
 	return rCommand.output, rCommand.err
 }
 

@@ -57,7 +57,7 @@ func Init() *Server {
 		make([]*queueEntry, 0),
 		make(chan bool),
 	}
-	s.scheduler.log = s.Log
+	s.scheduler.log = s.CtxLog
 	return s
 }
 
