@@ -61,15 +61,10 @@ func (s *Scheduler) schedule(ctx context.Context, command *pb.Command, key strin
 }
 
 func (s *Scheduler) runAndWait(c *rCommand) {
-	c.err = s.run(c)
-	if c.err == nil {
-		for c.endTime == 0 {
-			time.Sleep(time.Second)
-		}
-	}
+	c.err = s.run(c, true)
 }
 
-func (s *Scheduler) run(c *rCommand) error {
+func (s *Scheduler) run(c *rCommand, hardwait bool) error {
 	s.runs++
 
 	// Setup the gopath
@@ -121,14 +116,19 @@ func (s *Scheduler) run(c *rCommand) error {
 	c.startTime = time.Now().Unix()
 
 	// Monitor the job and report completion
-	go func() {
+	runner := func() {
 		err := c.command.Wait()
 		c.endTime = time.Now().Unix()
 
 		if err != nil {
 			c.err = fmt.Errorf("%v -> %v / %v", err, c.output, c.erroutput)
 		}
-	}()
+	}
+	if !hardwait {
+		go runner()
+	} else {
+		runner()
+	}
 
 	return nil
 }
