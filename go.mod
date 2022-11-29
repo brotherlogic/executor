@@ -6,6 +6,7 @@ require (
 	github.com/brotherlogic/discovery v0.0.0-20221129052745-a11eef165a08
 	github.com/brotherlogic/goserver v0.0.0-20221106165541-0672428e3628
 	github.com/brotherlogic/keystore v0.0.0-20221128110345-4d7503224d42
+	github.com/brotherlogic/logging v0.0.0-20221129060719-acd8bf372ed1 // indirect
 	github.com/golang/protobuf v1.5.2
 	github.com/prometheus/client_golang v1.14.0
 	golang.org/x/net v0.2.0
