@@ -3,8 +3,9 @@ module github.com/brotherlogic/executor
 go 1.16
 
 require (
-	github.com/brotherlogic/discovery v0.0.0-20230527174721-899846f80b8c
-	github.com/brotherlogic/githubcard v0.0.0-20230712045734-c0a027c2998b // indirect
+	github.com/brotherlogic/datastore v0.0.0-20230719051203-d20772cd6f83 // indirect
+	github.com/brotherlogic/discovery v0.0.0-20230718173448-9cd408170242
+	github.com/brotherlogic/githubcard v0.0.0-20230719051143-232a9a48b585 // indirect
 	github.com/brotherlogic/goserver v0.0.0-20230619155835-969c746dba11
 	github.com/brotherlogic/keystore v0.0.0-20230605062808-e90788956f75
 	github.com/golang/protobuf v1.5.3
