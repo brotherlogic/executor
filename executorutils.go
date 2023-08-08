@@ -16,7 +16,7 @@ func (s *Server) runQueue() {
 		s.CtxLog(ctx, fmt.Sprintf("THE QUEUE EXEC OUT START: %+v => %v", entry, entry.req.Command.Binary))
 		entry.resp.Status = pb.CommandStatus_IN_PROGRESS
 		output, err := s.runExecute(ctx, entry.req)
-		s.CtxLog(ctx, fmt.Sprintf("THE QUEUE EXEC OUT COMPLETE: %+v => %v", entry, entry.req.Command.Binary))
+		s.CtxLog(ctx, fmt.Sprintf("THE QUEUE EXEC OUT COMPLETE: %+v => %v (%v)", entry, entry.req.Command.Binary, err))
 		if err != nil {
 			entry.resp.CommandOutput = fmt.Sprintf("%v", err)
 			entry.resp.ExitCode = int32(status.Convert(err).Code())
@@ -25,8 +25,11 @@ func (s *Server) runQueue() {
 		}
 		entry.resp.Status = pb.CommandStatus_COMPLETE
 
+		s.CtxLog(ctx, "Acking Channel")
 		entry.ack <- true
+		s.CtxLog(ctx, "Acked Channel")
 		cancel()
+
 	}
 
 	s.done <- true
