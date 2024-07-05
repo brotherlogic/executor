@@ -3,7 +3,7 @@ module github.com/brotherlogic/executor
 go 1.22.1
 
 require (
-	github.com/brotherlogic/discovery v0.0.0-20240705215225-a9a590238ab2
+	github.com/brotherlogic/discovery v0.0.0-20240705220835-53ccc5f11024
 	github.com/brotherlogic/goserver v0.0.0-20240303220030-80da220f0393
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
 	github.com/golang/protobuf v1.5.4
