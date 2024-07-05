@@ -3,7 +3,7 @@ module github.com/brotherlogic/executor
 go 1.22.1
 
 require (
-	github.com/brotherlogic/discovery v0.0.0-20240705212555-beb2a3c26433
+	github.com/brotherlogic/discovery v0.0.0-20240705215225-a9a590238ab2
 	github.com/brotherlogic/goserver v0.0.0-20240303220030-80da220f0393
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
 	github.com/golang/protobuf v1.5.4
@@ -15,7 +15,7 @@ require (
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/brotherlogic/buildserver v0.0.0-20240628211629-ec38cf1799b5 // indirect
+	github.com/brotherlogic/buildserver v0.0.0-20240705220503-89995eb137f4 // indirect
 	github.com/brotherlogic/datastore v0.0.0-20240705024151-ad9e144aa8f8 // indirect
 	github.com/brotherlogic/dstore v0.0.0-20240705165527-7982c4fed622 // indirect
 	github.com/brotherlogic/githubcard v0.0.0-20240701145119-5ebc1f37e57d // indirect
