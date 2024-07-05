@@ -3,7 +3,7 @@ module github.com/brotherlogic/executor
 go 1.22.1
 
 require (
-	github.com/brotherlogic/discovery v0.0.0-20240628200643-dcf050d5855d
+	github.com/brotherlogic/discovery v0.0.0-20240705212555-beb2a3c26433
 	github.com/brotherlogic/goserver v0.0.0-20240303220030-80da220f0393
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
 	github.com/golang/protobuf v1.5.4
@@ -20,7 +20,7 @@ require (
 	github.com/brotherlogic/dstore v0.0.0-20240705165527-7982c4fed622 // indirect
 	github.com/brotherlogic/githubcard v0.0.0-20240701145119-5ebc1f37e57d // indirect
 	github.com/brotherlogic/githubridge v0.2802.0 // indirect
-	github.com/brotherlogic/gobuildslave v0.0.0-20240628223753-5eb1a5398771 // indirect
+	github.com/brotherlogic/gobuildslave v0.0.0-20240705212404-457094f2fcca // indirect
 	github.com/brotherlogic/lock v0.0.0-20240701140018-69872ea4c8fe // indirect
 	github.com/brotherlogic/logging v0.0.0-20240705200534-8393fef76211 // indirect
 	github.com/brotherlogic/monitor v0.0.0-20221025152653-c10877c5f9e6 // indirect
