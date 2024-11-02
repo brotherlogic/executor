@@ -5,7 +5,7 @@ go 1.22.7
 toolchain go1.23.0
 
 require (
-	github.com/brotherlogic/discovery v0.0.0-20241026180659-08adb0a0063f
+	github.com/brotherlogic/discovery v0.0.0-20241102203227-4dc2733fc44e
 	github.com/brotherlogic/goserver v0.0.0-20240826215223-fccbac46b3d4
 	github.com/brotherlogic/keystore v0.0.0-20240508161349-814b3200b126
 	github.com/golang/protobuf v1.5.4
