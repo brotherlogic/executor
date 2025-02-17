@@ -15,7 +15,7 @@ require (
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/brotherlogic/buildserver v0.0.0-20250217174203-94aec2348778 // indirect
+	github.com/brotherlogic/buildserver v0.0.0-20250217191113-fb636a1f580d // indirect
 	github.com/brotherlogic/datastore v0.0.0-20250113225754-a9cab19c721e // indirect
 	github.com/brotherlogic/dstore v0.0.0-20250217183055-b38b2cca103c // indirect
 	github.com/brotherlogic/githubcard v0.0.0-20250217190430-256866b7d25a // indirect
